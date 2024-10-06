@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Link {
     @Id
-    private String id;
+    private Long id;
 
     @Column(nullable = false)
     private String url;
@@ -19,21 +19,21 @@ public class Link {
     @Column(updatable = false)
     private LocalDateTime createdAt;
 
-    private Link(String id, String url) {
+    private Link(Long id, String url) {
         this.id = id;
         this.url = url;
         this.createdAt = LocalDateTime.now();
     }
 
-    public static LinkBuilder builder(String id, String url) {
+    public static LinkBuilder builder(Long id, String url) {
         return new LinkBuilder(id, url);
     }
 
     public static class LinkBuilder {
-        private final String id;
+        private final Long id;
         private final String url;
 
-        private LinkBuilder(String id, String url) {
+        private LinkBuilder(Long id, String url) {
             this.id = id;
             this.url = url;
         }
