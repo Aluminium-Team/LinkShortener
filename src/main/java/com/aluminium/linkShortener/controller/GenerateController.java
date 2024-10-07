@@ -1,7 +1,6 @@
 package com.aluminium.linkShortener.controller;
 
-import com.aluminium.linkShortener.service.GenerateService;
-import com.aluminium.linkShortener.service.GetLinkService;
+import com.aluminium.linkShortener.service.LinkService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,10 +12,7 @@ import org.springframework.web.servlet.view.RedirectView;
 public class GenerateController {
 
     @Autowired
-    GenerateService generateService;
-
-    @Autowired
-    GetLinkService getLinkService;
+    LinkService linkService;
 
 //    This endpoint is created for testing "not found" error only
     @GetMapping("/")
@@ -29,7 +25,7 @@ public class GenerateController {
     @PostMapping("/{link}")
     public ResponseEntity<String> generateShortLink(String link) {
 
-        String generatedLink = generateService.generateLink(link);
+        String generatedLink = linkService.shortenLink(link);
 
         return new ResponseEntity<String>(generatedLink, HttpStatus.CREATED);
 
@@ -38,15 +34,11 @@ public class GenerateController {
     @GetMapping("/{generatedId}")
     public RedirectView redirectToGoogle(@PathVariable String generatedId) throws Exception {
         try {
-            String originalLink = getLinkService.getLink(generatedId);
+            String originalLink = linkService.getLink(generatedId);
             return new RedirectView(originalLink);
         } catch (Exception e) {
             return new RedirectView("/");
         }
-
-
-
     }
-
 
 }
