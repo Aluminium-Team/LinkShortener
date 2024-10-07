@@ -20,7 +20,7 @@ public class GenerateController {
 
         String generatedLink = generateService.generateLink(link);
 
-        return new ResponseEntity<String>("generatedLink", HttpStatus.CREATED);
+        return new ResponseEntity<String>(generatedLink, HttpStatus.CREATED);
 
     }
 }
