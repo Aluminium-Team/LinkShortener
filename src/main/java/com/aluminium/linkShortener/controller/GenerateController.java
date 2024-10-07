@@ -15,12 +15,12 @@ public class GenerateController {
     @Autowired
     GenerateService generateService;
 
-    @PostMapping("/")
+    @PostMapping("/{link}")
     public ResponseEntity<String> generateShortLink(String link) {
 
         String generatedLink = generateService.generateLink(link);
 
-        return new ResponseEntity<String>(generatedLink, HttpStatus.CREATED);
+        return new ResponseEntity<String>("generatedLink", HttpStatus.CREATED);
 
     }
 }
