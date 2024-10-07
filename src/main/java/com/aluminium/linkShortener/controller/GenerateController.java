@@ -18,6 +18,14 @@ public class GenerateController {
     @Autowired
     GetLinkService getLinkService;
 
+//    This endpoint is created for testing "not found" error only
+    @GetMapping("/")
+    public String helloWorld () {
+
+        return "Homepage";
+
+    }
+
     @PostMapping("/{link}")
     public ResponseEntity<String> generateShortLink(String link) {
 
@@ -29,10 +37,15 @@ public class GenerateController {
 
     @GetMapping("/{generatedId}")
     public RedirectView redirectToGoogle(@PathVariable String generatedId) throws Exception {
+        try {
+            String originalLink = getLinkService.getLink(generatedId);
+            return new RedirectView(originalLink);
+        } catch (Exception e) {
+            return new RedirectView("/");
+        }
 
-        String originalLink = getLinkService.getLink(generatedId);
 
-        return new RedirectView(originalLink);
+
     }
 
 
