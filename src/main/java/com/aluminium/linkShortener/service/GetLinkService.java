@@ -15,7 +15,9 @@ public class GetLinkService {
 
     public String getLink(String generatedId) throws Exception {
 
-        Long id = Long.valueOf(generatedId);
+        Long id = Long.parseLong(generatedId,16);
+
+        System.out.println(id);
 
         Optional<Link> link = linkRepository.findById(id);
 

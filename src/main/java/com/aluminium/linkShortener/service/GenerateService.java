@@ -11,7 +11,7 @@ public class GenerateService {
     LinkRepository linkRepository;
 
     public String generateLink(String link) {
-        // Do you Magic 3am Eyad
+        // Do your Magic 3am ramez
 
         return "";
     }
