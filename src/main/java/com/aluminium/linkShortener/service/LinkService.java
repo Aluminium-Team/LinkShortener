@@ -22,9 +22,7 @@ public class LinkService {
 
     public String getLink(String generatedId) throws Exception {
 
-        Long id = Long.parseLong(generatedId,16);
-
-        System.out.println(id);
+        Long id = idService.hexToId(generatedId);
 
         Optional<Link> link = linkRepository.findById(id);
 
@@ -41,7 +39,7 @@ public class LinkService {
 
     }
 
-    private void saveLink(String shortnedUrl){
+    public String createLink(String shortnedUrl){
 
 //        ** blocked by "generate id" **
 
@@ -51,22 +49,7 @@ public class LinkService {
 //                )
 //                .build();
 //        linkRepository.save(link);
+        return "Do your Magic 3am Ramez";
     }
 
-    public String shortenLink(String link) {
-
-        String shortnedLink = generateShortLink(link);
-        saveLink(shortnedLink);
-
-        return shortnedLink;
-
-    }
-
-    public String generateShortLink(String originalLink) {
-        // Generate a Murmur3 hash and convert it to hex
-        String murmurHash = Hashing.murmur3_32().hashString(originalLink, StandardCharsets.UTF_8).toString();
-        int hashLength = murmurHash.length();
-        // Use the first 6 characters as the short link
-        return murmurHash.substring(0, min(hashLength,6));
-    }
 }
