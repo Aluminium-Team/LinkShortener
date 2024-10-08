@@ -34,28 +34,32 @@ public class GenerateController {
 
     }
 
+
     @PostMapping("/")
     public ResponseEntity<String> generateShortLink(@RequestBody Map<String,String> inputLink, HttpServletRequest request) {
 
-        String link = inputLink.get("link");
+        try{
+            String link = inputLink.get("link");
 
-        String domain = requestService.getDomain(request);
-        String generatedLink = domain+linkService.createLink(link);
+            String domain = requestService.getDomain(request);
+            String generatedLink = domain+linkService.createLink(link);
 
-        return new ResponseEntity<String>(generatedLink, HttpStatus.CREATED);
+            return new ResponseEntity<String>(generatedLink, HttpStatus.CREATED);
+
+        }catch (IllegalArgumentException e){
+            return new ResponseEntity<String>("invalid url", HttpStatus.BAD_REQUEST);
+        }
+
 
     }
 
     @GetMapping("/{hexId}")
     public RedirectView redirectToGoogle(@PathVariable String hexId) throws Exception {
         try {
+
             String originalLink = linkService.getLink(hexId);
-
-            if (!originalLink.startsWith("http://") && !originalLink.startsWith("https://")) {
-                originalLink = "https://" + originalLink;
-            }
-
             return new RedirectView(originalLink);
+
         } catch (Exception e) {
             return new RedirectView("/");
         }

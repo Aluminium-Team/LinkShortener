@@ -27,7 +27,7 @@ public class LinkService {
 
             String originalLink = linkObject.getUrl();
 
-            return originalLink;
+            return checkPref(originalLink);
 
         } else {
             throw new Exception("Id not found");
@@ -35,8 +35,17 @@ public class LinkService {
 
     }
 
-    public String createLink(String url){
+    private boolean lengthCheck(String url){
+        if (url.length()>=500){
+            return false;
+        }
+        return true;
+    }
 
+    public String createLink(String url){
+        if (!lengthCheck(url)){
+            throw new IllegalArgumentException();
+        }
         Long generatedId = idService.generateId(1L);
 
         Link link = linkBuilder(generatedId,url);
@@ -46,6 +55,13 @@ public class LinkService {
         String hexId = idService.idToHex(generatedId);
 
         return hexId;
+    }
+
+    public String checkPref(String link){
+        if (!link.startsWith("http://") && !link.startsWith("https://")) {
+            link = "https://" + link;
+        }
+        return link;
     }
 
     private void saveLink(Link link){
