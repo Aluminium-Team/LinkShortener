@@ -63,6 +63,7 @@
 			<artifactId>guava</artifactId>
 			<version>32.0.1-jre</version> <!-- Latest version -->
 		</dependency>
+
 	</dependencies>
 
 	<build>

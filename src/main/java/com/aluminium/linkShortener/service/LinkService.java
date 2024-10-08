@@ -2,14 +2,10 @@ package com.aluminium.linkShortener.service;
 
 import com.aluminium.linkShortener.model.Link;
 import com.aluminium.linkShortener.repository.LinkRepository;
-import com.google.common.hash.Hashing;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.nio.charset.StandardCharsets;
 import java.util.Optional;
-
-import static java.lang.Math.min;
 
 @Service
 public class LinkService {
@@ -20,9 +16,9 @@ public class LinkService {
     @Autowired
     IdService idService;
 
-    public String getLink(String generatedId) throws Exception {
+    public String getLink(String hexId) throws Exception {
 
-        Long id = idService.hexToId(generatedId);
+        Long id = idService.hexToId(hexId);
 
         Optional<Link> link = linkRepository.findById(id);
 
@@ -39,17 +35,31 @@ public class LinkService {
 
     }
 
-    public String createLink(String shortnedUrl){
+    public String createLink(String url){
 
-//        ** blocked by "generate id" **
+        Long generatedId = idService.generateId(1L);
 
-//        Link link = Link.builder(
-//                idService.generateId(),
-//                shortnedUrl
-//                )
-//                .build();
-//        linkRepository.save(link);
-        return "Do your Magic 3am Ramez";
+        Link link = linkBuilder(generatedId,url);
+
+        saveLink(link);
+
+        String hexId = idService.idToHex(generatedId);
+
+        return hexId;
+    }
+
+    private void saveLink(Link link){
+        linkRepository.save(link);
+    }
+
+    private Link linkBuilder(Long generatedId, String url){
+
+        Link link = Link.builder(
+                    generatedId,
+                    url
+                    ).build();
+
+        return  link;
     }
 
 }

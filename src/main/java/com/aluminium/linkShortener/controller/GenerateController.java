@@ -2,6 +2,8 @@ package com.aluminium.linkShortener.controller;
 
 import com.aluminium.linkShortener.service.IdService;
 import com.aluminium.linkShortener.service.LinkService;
+import com.aluminium.linkShortener.service.RequestService;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,6 +20,9 @@ public class GenerateController {
     LinkService linkService;
 
     @Autowired
+    RequestService requestService;
+
+    @Autowired
     IdService idService;
 
 //    This endpoint is created for testing "not found" error only
@@ -30,20 +35,21 @@ public class GenerateController {
     }
 
     @PostMapping("/")
-    public ResponseEntity<String> generateShortLink(@RequestBody Map<String,String> inputLink) {
+    public ResponseEntity<String> generateShortLink(@RequestBody Map<String,String> inputLink, HttpServletRequest request) {
 
         String link = inputLink.get("link");
 
-        String generatedLink = linkService.createLink(link);
+        String domain = requestService.getDomain(request);
+        String generatedLink = domain+linkService.createLink(link);
 
         return new ResponseEntity<String>(generatedLink, HttpStatus.CREATED);
 
     }
 
-    @GetMapping("/{generatedId}")
-    public RedirectView redirectToGoogle(@PathVariable String generatedId) throws Exception {
+    @GetMapping("/{hexId}")
+    public RedirectView redirectToGoogle(@PathVariable String hexId) throws Exception {
         try {
-            String originalLink = linkService.getLink(generatedId);
+            String originalLink = linkService.getLink(hexId);
             return new RedirectView(originalLink);
         } catch (Exception e) {
             return new RedirectView("/");
