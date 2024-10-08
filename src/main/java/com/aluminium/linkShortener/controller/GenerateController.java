@@ -50,10 +50,17 @@ public class GenerateController {
     public RedirectView redirectToGoogle(@PathVariable String hexId) throws Exception {
         try {
             String originalLink = linkService.getLink(hexId);
+
+            if (!originalLink.startsWith("http://") && !originalLink.startsWith("https://")) {
+                originalLink = "https://" + originalLink;
+            }
+
             return new RedirectView(originalLink);
         } catch (Exception e) {
             return new RedirectView("/");
         }
+
+
     }
 
 }
