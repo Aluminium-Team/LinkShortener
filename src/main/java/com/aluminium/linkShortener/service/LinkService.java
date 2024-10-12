@@ -19,7 +19,6 @@ public class LinkService {
     public String getLink(String hexId) throws Exception {
 
         Long id = idService.hexToId(hexId);
-
         Optional<Link> link = linkRepository.findById(id);
 
         if (link.isPresent()) {
@@ -35,26 +34,21 @@ public class LinkService {
 
     }
 
-    private boolean lengthCheck(String url){
-        if (url.length()>=500){
-            return false;
-        }
-        return true;
+    private boolean lengthCheck(String url) {
+        return url.length() < 500;
     }
 
-    public String createLink(String url){
+    public String createLink(String url) {
         if (!lengthCheck(url)){
             throw new IllegalArgumentException();
         }
-        Long generatedId = idService.generateId(1L);
+        Long generatedId = idService.generateId();
 
         Link link = linkBuilder(generatedId,url);
 
         saveLink(link);
 
-        String hexId = idService.idToHex(generatedId);
-
-        return hexId;
+        return idService.idToHex(generatedId);
     }
 
     public String checkPref(String link){
@@ -64,18 +58,16 @@ public class LinkService {
         return link;
     }
 
-    private void saveLink(Link link){
+    private void saveLink(Link link) {
         linkRepository.save(link);
     }
 
-    private Link linkBuilder(Long generatedId, String url){
+    private Link linkBuilder(Long generatedId, String url) {
 
-        Link link = Link.builder(
+        return Link.builder(
                     generatedId,
                     url
                     ).build();
-
-        return  link;
     }
 
 }
